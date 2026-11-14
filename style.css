@@ -1,4 +1,3 @@
-
 body {
     margin: 0;
     padding: 0;
@@ -7,18 +6,16 @@ body {
 }
 
 main {
-    max-width: 800px;    
-    margin: 0 auto;        
-    padding: 30px;          
-    background-color: #ffffff; 
-    min-height: 100vh;      
-    box-sizing: border-box; 
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 30px;
+    background-color: #ffffff;
+    min-height: 100vh;
+    box-sizing: border-box;
 
     border-left: 2px solid #cccccc;
     border-right: 2px solid #cccccc;
-    
 }
-
 
 header {
     text-align: center;
@@ -35,10 +32,32 @@ header {
 #cartForm {
     display: flex;
     gap: 10px;
-    margin-bottom: 20px;
+    margin-bottom: 15px;
 }
 
-input {
+#cartOptions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 25px;
+    align-items: center;
+    margin-bottom: 15px;
+    font-size: 15px;
+}
+
+#cartOptions label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.scenario-select {
+    padding: 6px;
+    font-size: 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.cart-input {
     padding: 8px;
     font-size: 16px;
     border: 1px solid #ccc;
@@ -69,6 +88,11 @@ button:disabled {
     font-weight: bold;
 }
 
+.error-text {
+    color: orange;
+    font-weight: bold;
+}
+
 .error-box {
     background-color: #ffe6e6;
     border: 1px solid red;
@@ -85,4 +109,11 @@ button:disabled {
 .cart-total {
     font-weight: bold;
     font-size: 1.1em;
+}
+
+.error-img {
+    max-width: 200px;
+    width: 100%;
+    display: block;
+    margin: 20px auto;
 }

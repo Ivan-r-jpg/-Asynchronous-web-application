@@ -2,6 +2,7 @@
 <html lang="uk">
     <head>
         <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>Перегляд кошика інтернет-магазину</title>
         <script src="script.js" defer></script>
         <link rel="stylesheet" href="style.css">
@@ -12,18 +13,34 @@
         </header>
         <main>
             <section id="cartForm">
-                <input type="number" id="cartIdInput" placeholder="Введіть ID кошика" value="1">
+                <input type="number" id="cartIdInput" class="cart-input" placeholder="Введіть ID кошика" value="1" min="1">
                 <button type="button" id="loadCartButton">Завантажити кошик</button>
             </section>
-            <section id="cartDisplay"> 
-                <!-- Область для відображення стану запиту-->
+
+            <section id="cartOptions">
+                <label>
+                    <input type="checkbox" id="testModeCheckbox">
+                    Тестовий режим (перша спроба штучно невдала)
+                </label>
+                <label>
+                    Сценарій:
+                    <select id="scenarioSelect" class="scenario-select">
+                        <option value="normal">Звичайний запит (delay=3000)</option>
+                        <option value="404">Помилка HTTP 404</option>
+                        <option value="503">Помилка HTTP 503</option>
+                        <option value="timeout">Таймаут (2 с при delay=3000)</option>
+                    </select>
+                </label>
             </section>
-            <section id="cartData">
-                <!-- Область для відображення даних кошика -->
-            </section>
-            <section id="cartError">
-                <!-- Область для відображення помилок -->
-            </section>
+
+            <!-- Область для відображення стану запиту -->
+            <section id="cartDisplay" aria-live="polite"></section>
+
+            <!-- Область для відображення даних кошика -->
+            <section id="cartData"></section>
+
+            <!-- Область для відображення помилок -->
+            <section id="cartError" aria-live="assertive"></section>
         </main>
     </body>
 </html>
