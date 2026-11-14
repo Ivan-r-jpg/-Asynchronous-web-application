@@ -12,6 +12,7 @@ loadButton.addEventListener('click', async () => {
     }
 });
 
+
 async function loadCart(id) {
     cartContainer.innerHTML = '';
     cartError.innerHTML = '';
@@ -25,18 +26,23 @@ async function loadCart(id) {
     let loadingInterval;
 
     loadingInterval = setInterval(() => {
-        dotCount++;
-        if (dotCount > 3) dotCount = 1; 
+        if (dotCount > 3) dotCount = 0; 
         
         const dots = '.'.repeat(dotCount); 
-        loadingMessage.textContent = `Завантаження кошика${dots} Будь ласка, зачекайте.`;
-    }, 500);
+        loadingMessage.textContent = `Завантаження кошика${dots} (Будь ласка, зачекайте)`;
+        dotCount++;
+    }, 350);
 
     loadButton.disabled = true;
 
     try{
 
         const response = await fetch(`https://dummyjson.com/carts/${id}?delay=3000`);
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
         const data = await response.json();
         
         const cartHeader = document.createElement('h2');
@@ -80,13 +86,15 @@ async function loadCart(id) {
         errorDiv.classList.add('error-box');
         
         const errorTitle = document.createElement('strong');
-        errorTitle.textContent = 'Ой, халепа! ';
+        errorTitle.textContent = 'Ой, халепа!';
         
         const errorText = document.createElement('span');
         errorText.textContent = `Не вдалося завантажити кошик. Деталі: ${error.message}`;
         
         errorDiv.append(errorTitle, errorText);
         cartError.appendChild(errorDiv);
+
+
     } finally {
         clearInterval(loadingInterval);
         cartDisplay.innerHTML = '';
