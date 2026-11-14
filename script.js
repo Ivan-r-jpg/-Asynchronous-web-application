@@ -15,8 +15,23 @@ loadButton.addEventListener('click', async () => {
 async function loadCart(id) {
     cartContainer.innerHTML = '';
     cartError.innerHTML = '';
+    cartDisplay.innerHTML = '';
 
-    cartDisplay.innerHTML = '<p style="color: blue; font-weight: bold;">Завантаження кошика… Будь ласка, зачекайте.</p>';
+    const loadingMessage = document.createElement('p');
+    loadingMessage.classList.add('loading-text'); 
+    cartDisplay.appendChild(loadingMessage);
+
+    let dotCount = 0;
+    let loadingInterval;
+
+    loadingInterval = setInterval(() => {
+        dotCount++;
+        if (dotCount > 3) dotCount = 1; 
+        
+        const dots = '.'.repeat(dotCount); 
+        loadingMessage.textContent = `Завантаження кошика${dots} Будь ласка, зачекайте.`;
+    }, 500);
+
     loadButton.disabled = true;
 
     try{
@@ -24,37 +39,56 @@ async function loadCart(id) {
         const response = await fetch(`https://dummyjson.com/carts/${id}?delay=3000`);
         const data = await response.json();
         
-        cartContainer.innerHTML = `
-            <h2>Інформація про кошик №${data.id}</h2>
-            <p><strong>Загальна вартість кошика:</strong> $${data.total}</p>
-            <hr>
-            <h3>Список товарів:</h3>
-        `;
+        const cartHeader = document.createElement('h2');
+        cartHeader.textContent = `Інформація про кошик №${data.id}`;
+
+        const totalCostP = document.createElement('p');
+        totalCostP.classList.add('cart-total');
+        totalCostP.textContent = `Загальна вартість кошика: $${data.total.toFixed(2)}`;
+
+        const divider = document.createElement('hr');
+
+        const productsListHeader = document.createElement('h3');
+        productsListHeader.textContent = 'Список товарів:';
+
+        cartContainer.append(cartHeader, totalCostP, divider, productsListHeader);
 
         for (const product of data.products) {
-            const productElement = document.createElement('div');
+           const productElement = document.createElement('div');
+            productElement.classList.add('product-item'); 
             
-            productElement.style.borderBottom = '1px dashed #ccc';
-            productElement.style.padding = '10px 0';
+            const titleH4 = document.createElement('h4');
+            titleH4.textContent = product.title;
             
-            productElement.innerHTML = `
-                <h4>${product.title}</h4>
-                <p><strong>Ціна:</strong> $${product.price.toFixed(2)} | <strong>Кількість:</strong> ${product.quantity} шт.</p>
-                <p><strong>Вартість товару:</strong> $${product.total.toFixed(2)}</p>
-                <p><strong>Зі знижкою:</strong> $${product.discountedTotal.toFixed(2)}</p>
-            `;
+            const priceP = document.createElement('p');
+            priceP.textContent = `Ціна: $${product.price.toFixed(2)} | Кількість: ${product.quantity} шт.`;
+            
+            const totalP = document.createElement('p');
+            totalP.textContent = `Вартість товару: $${product.total.toFixed(2)}`;
+            
+            const discountP = document.createElement('p');
+            discountP.textContent = `Зі знижкою: $${product.discountedTotal.toFixed(2)}`;
+            
+            productElement.append(titleH4, priceP, totalP, discountP);
             
             cartContainer.appendChild(productElement);
         }
     } catch (error) {
         console.error("Виникла помилка:", error);
-        cartError.innerHTML = `
-            <div style="background-color: #ffe6e6; border: 1px solid red; padding: 15px; border-radius: 4px; color: red;">
-                <strong>Ой, халепа!</strong> Не вдалося завантажити кошик.<br>
-                <em>Деталі: ${error.message}</em>
-            </div>
-        `;
+        
+        const errorDiv = document.createElement('div');
+        errorDiv.classList.add('error-box');
+        
+        const errorTitle = document.createElement('strong');
+        errorTitle.textContent = 'Ой, халепа! ';
+        
+        const errorText = document.createElement('span');
+        errorText.textContent = `Не вдалося завантажити кошик. Деталі: ${error.message}`;
+        
+        errorDiv.append(errorTitle, errorText);
+        cartError.appendChild(errorDiv);
     } finally {
+        clearInterval(loadingInterval);
         cartDisplay.innerHTML = '';
         loadButton.disabled = false;
     }
