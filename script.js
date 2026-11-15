@@ -11,12 +11,20 @@ const cartContainer = document.getElementById('cartData');
 const cartDisplay = document.getElementById('cartDisplay');
 const cartError = document.getElementById('cartError');
 
+cartIdInput.addEventListener('input', () => {
+    if (cartIdInput.value.trim() === '') {
+            loadButton.disabled = true;
+        } else {
+            loadButton.disabled = false;
+        }
+});
+
 loadButton.addEventListener('click', () => {
     const cartId = cartIdInput.value.trim();
 
     cartError.innerHTML = '';
 
-    if (!cartId || Number(cartId) < 1) {
+    if (!cartId || Number(cartId) < 1 || Number(cartId) % 1 !== 0 || cartId === '') {
         showErrorBox('Введіть коректний ID кошика (ціле число від 1).');
         return;
     }
